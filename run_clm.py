@@ -36,7 +36,7 @@ from datasets import load_dataset
 from packaging import version
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
-
+from colossalai.nn.layer.gpt_neox import GPTNeoXAttention
 import colossalai
 import transformers
 from colossalai.context import ParallelMode
@@ -369,7 +369,7 @@ def main():
         # we can not import it until huggingface fix it
         logger.info("Train a new model from scratch", ranks=[0])
         with ColoInitContext(device=init_dev):
-            model = OPTForCausalLM(config)
+            model = AutoModelForCausalLM(config)
     else:
         logger.info("Finetune a pre-trained model", ranks=[0])
         with ColoInitContext(device=init_dev):
