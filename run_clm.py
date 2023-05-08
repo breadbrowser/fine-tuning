@@ -55,6 +55,7 @@ from transformers import (
     AutoTokenizer,
     GPT2Tokenizer,
     OPTForCausalLM,
+    AutoModelForCausalLM,
     SchedulerType,
     default_data_collator,
     get_scheduler,
@@ -372,7 +373,7 @@ def main():
     else:
         logger.info("Finetune a pre-trained model", ranks=[0])
         with ColoInitContext(device=init_dev):
-            model = OPTForCausalLM.from_pretrained(args.model_name_or_path,
+            model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path,
                                                    from_tf=bool(".ckpt" in args.model_name_or_path),
                                                    config=config,
                                                    local_files_only=False)
