@@ -43,7 +43,6 @@ trainer = Trainer(
     model=model,
     config=config,
     optimizer=optimizer,
-    train_dataset=train_data,
     train_dataset=[
         ({"input_ids": train_data.input_ids}
     ],
