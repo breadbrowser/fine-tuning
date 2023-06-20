@@ -29,7 +29,10 @@ tokenizer.eos_token_id = 2
 
 dataset_name=dataset_name
 dataset = load_dataset(dataset_name)
-dataset, other = random_split(dataset, lengths=[len(dataset) * 0.75, len(dataset) * 0.25])
+train_size = int(len(dataset)* 0.75)
+test_size = len(dataset) - train_size
+dataset, _ = random_split(dataset, [train_size, test_size])
+other, _ = random_split(dataset, [test_size, train_size])
 
 dataset = DataLoader(dataset, batch_size=4, shuffle=True)
 other = DataLoader(other, batch_size=4, shuffle=True)
