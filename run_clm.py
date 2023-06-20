@@ -35,7 +35,7 @@ trainer = Trainer(
     model=model,
     config=config,
     optimizer=optimizer,
-    train_dataset=train_data["train"]
+    train_dataset=data["train"]
 )
 trainer.train()
 model.save_pretrained("save/")
