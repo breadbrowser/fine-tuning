@@ -28,23 +28,14 @@ tokenizer.eos_token_id = 2
 
 
 dataset_name=dataset_name
-dataset = load_dataset(dataset_name)
-data = [dict(row) for row in dataset['train']]
-train_data, test_data = train_test_split(data, test_size=0.2)
-
-def tokenize(batch):
-    return tokenizer(batch[column], padding='max_length', truncation=True, max_length=max_length)
-    
-train_data = list(map(tokenize, train_data))
-test_data = list(map(tokenize, test_data))
-
+data = load_dataset(dataset_name) 
+data = data.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
 
 trainer = Trainer(
     model=model,
     config=config,
     optimizer=optimizer,
     train_dataset=train_data,
-    eval_dataset=test_data
 )
 trainer.train()
 model.save_pretrained("save/")
