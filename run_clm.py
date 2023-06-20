@@ -44,18 +44,7 @@ trainer = Trainer(
     config=config,
     optimizer=optimizer,
     train_dataset=train_data,
-    eval_dataset=test_data,
-    args=transformers.TrainingArguments(
-            auto_find_batch_size=True, 
-            warmup_ratio=0.05,
-            num_train_epochs=2,  
-            lr_scheduler_type="cosine",
-            fp16=True,
-            save_steps=15500,
-            logging_steps=1, 
-            report_to="wandb",
-            output_dir='outputs'
-    )
+    eval_dataset=test_data
 )
 trainer.train()
 model.save_pretrained("save/")
