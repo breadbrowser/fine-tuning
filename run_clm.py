@@ -43,8 +43,8 @@ trainer = Trainer(
     model=model,
     config=config,
     optimizer=optimizer,
-    train_dataset=[({"input_ids": train_data.input_ids})],
-    eval_dataset=[({"input_ids": test_data.input_ids})]
+    train_dataset=train_data,
+    eval_dataset=test_data
 )
 trainer.train()
 model.save_pretrained("save/")
