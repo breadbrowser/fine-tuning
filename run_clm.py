@@ -45,7 +45,7 @@ trainer = Trainer(
     optimizer=optimizer,
     train_dataset=train_data,
     eval_dataset=test_data,
-        monitors=[
+    monitors=[
         LossMonitor(config),
         TGSMonitor(config),
         MemoryMonitor(config),
