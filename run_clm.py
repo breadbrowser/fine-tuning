@@ -7,7 +7,7 @@ learning=3e-6
 
 # main.py
 import transformers
-from torch.utils.data import DataLoader, random_split
+from sklearn.model_selection import train_test_split
 from datasets import load_dataset
 from collie import Trainer, CollieConfig, LlamaForCausalLM
 from collie.optim.lomo import Lomo
@@ -29,22 +29,22 @@ tokenizer.eos_token_id = 2
 
 dataset_name=dataset_name
 dataset = load_dataset(dataset_name)
-train_size = int(0.8 * (dataset['train'].num_rows))
-test_size = (dataset['train'].num_rows) - train_size
-train_dataset, test_dataset = random_split(dataset['train'], [train_size, test_size])
+data = [dict(row) for row in dataset['train']]
+train_data, test_data = train_test_split(data, test_size=0.2)
 
-dataset = train_dataset
-other = test_dataset
+def tokenize(batch):
+    return tokenizer(batch[column], padding='max_length', truncation=True, max_length=max_length)
+    
+train_data = list(map(tokenize, train_data))
+test_data = list(map(tokenize, test_data))
 
-dataset = dataset.map(lambda samples: tokenizer(row[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
-other = other.map(lambda samples: tokenizer(row[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
 
 trainer = Trainer(
     model=model,
     config=config,
     optimizer=optimizer,
-    train_dataset=dataset["train"],
-    eval_dataset=other["train"]
+    train_dataset=train_data,
+    eval_dataset=test_data
 
 )
 trainer.train()
