@@ -32,14 +32,13 @@ data = load_dataset(dataset_name)
 data = data.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
 
 
-eval_dataset = [(data["train"], data["train"])]
-
-
 trainer = Trainer(
     model=model,
     config=config,
     optimizer=optimizer,
-    train_dataset=eval_dataset
+    train_dataset=train_dataset=[
+        ({"input_ids": data["train"].input_ids}, {"labels": data["train"].input_ids})
+    ]
 )
 trainer.train()
 model.save_pretrained("save/")
