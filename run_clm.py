@@ -29,13 +29,14 @@ tokenizer.eos_token_id = 2
 
 dataset_name=dataset_name
 dataset = load_dataset(dataset_name)
-train_size = int(len(dataset) * 0.75)
+train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
-dataset, other = random_split(dataset, lengths=[len(dataset), len(dataset) / 75])
+train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
 
-dataset = DataLoader(dataset, batch_size=4, shuffle=True)
-other = DataLoader(other, batch_size=4, shuffle=True)
+
+dataset = DataLoader(train_dataset, batch_size=4, shuffle=True)
+other = DataLoader(test_dataset, batch_size=4, shuffle=True)
 
 dataset = dataset.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
 other = other.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
