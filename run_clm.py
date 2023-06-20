@@ -33,14 +33,11 @@ train_size = int(0.8 * (dataset['train'].num_rows))
 test_size = (dataset['train'].num_rows) - train_size
 train_dataset, test_dataset = random_split(dataset['train'], [train_size, test_size])
 
+dataset = train_dataset
+other = test_dataset
 
-
-
-dataset = DataLoader(train_dataset, batch_size=4, shuffle=True)
-other = DataLoader(test_dataset, batch_size=4, shuffle=True)
-
-dataset = dataset.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
-other = other.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
+dataset = dataset.map(lambda samples: tokenizer(row[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
+other = other.map(lambda samples: tokenizer(row[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
 
 trainer = Trainer(
     model=model,
