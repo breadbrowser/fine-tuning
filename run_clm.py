@@ -1,7 +1,7 @@
 token="breadlicker45/muse-tokenizer"
 model="decapoda-research/llama-7b-hf"
 dataset_name="breadlicker45/Calorie-dataset"
-column='data'
+column='Data'
 max_length=2048
 learning=3e-6
 
