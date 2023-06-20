@@ -31,7 +31,7 @@ dataset_name=dataset_name
 dataset = load_dataset(dataset_name)
 train_size = int(len(dataset) * 0.75)
 test_size = len(dataset) - train_size
-dataset, other = random_split(dataset, lengths=[len(dataset), train_size])
+dataset, other = random_split(dataset, lengths=[len(dataset), len(dataset) / 75])
 
 
 dataset = DataLoader(dataset, batch_size=4, shuffle=True)
