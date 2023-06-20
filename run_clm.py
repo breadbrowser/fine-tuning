@@ -44,8 +44,8 @@ trainer = Trainer(
     config=config,
     optimizer=optimizer,
     train_dataset=train_data,
-    eval_dataset=test_data
-
+    eval_dataset=test_data,
+    report_to="wandb"
 )
 trainer.train()
 model.save_pretrained("save/")
