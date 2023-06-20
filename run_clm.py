@@ -9,7 +9,7 @@ learning=3e-6
 import transformers
 from sklearn.model_selection import train_test_split
 from datasets import load_dataset
-from collie import Trainer, CollieConfig, LlamaForCausalLM
+from collie import Trainer, CollieConfig, LlamaForCausalLM, TGSMonitor, MemoryMonitor, TGSMonitor, LossMonitor
 from collie.optim.lomo import Lomo
 from transformers import LlamaTokenizer
 
@@ -45,7 +45,12 @@ trainer = Trainer(
     optimizer=optimizer,
     train_dataset=train_data,
     eval_dataset=test_data,
-    report_to="wandb"
+        monitors=[
+        LossMonitor(config),
+        TGSMonitor(config),
+        MemoryMonitor(config),
+        LRMonitor(config)
+    ]
 )
 trainer.train()
 model.save_pretrained("save/")
