@@ -7,6 +7,7 @@ learning=3e-6
 
 # main.py
 import transformers
+from torch.utils.data import DataLoader, random_split
 from datasets import load_dataset
 from collie import Trainer, CollieConfig, LlamaForCausalLM
 from collie.optim.lomo import Lomo
@@ -27,15 +28,21 @@ tokenizer.eos_token_id = 2
 
 
 dataset_name=dataset_name
-data = load_dataset(dataset_name)
-data = data.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
+dataset = load_dataset(dataset_name)
+dataset, other = random_split(data, lengths=[len(data) * 0.75, len(data) * 0.25])
 
+dataset = DataLoader(dataset, batch_size=4, shuffle=True)
+other = DataLoader(other, batch_size=4, shuffle=True)
+
+dataset = dataset.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
+other = other.map(lambda samples: tokenizer(samples[collum], padding='max_length', truncation=True, max_length=max_length), batched=True)
 
 trainer = Trainer(
     model=model,
     config=config,
     optimizer=optimizer,
-    data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
+    train_dataset=dataset["train"],
+    eval_dataset=other["train"]
 
 )
 trainer.train()
