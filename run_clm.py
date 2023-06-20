@@ -22,6 +22,27 @@ accelerator = Accelerator()
 tokenizer = AutoTokenizer.from_pretrained(token, bos_token='<|startoftext|>',
                                           eos_token='<|endoftext|>', pad_token='<|pad|>')
 config = CollieConfig.from_pretrained("decapoda-research/llama-7b-hf")
+
+
+config.ds_config = {
+    "fp16": {
+        "enabled": True
+    },
+    # "monitor_config": {
+    #     "enabled": True,
+    #     "wandb": {
+    #         "enabled": True,
+    #         "team": "00index",
+    #         "project": "collie",
+    #         "group": "test_evaluator"
+    #     }
+    # },
+    "zero_optimization": {
+        "stage": 3,
+    }
+}
+
+
 model = LlamaForCausalLM.from_pretrained(model, config=config)
 #model.resize_token_embeddings(len(tokenizer))
 optimizer = AdamW(model.parameters(), lr=learning)
