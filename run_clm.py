@@ -9,7 +9,7 @@ learning=3e-6
 import transformers
 from sklearn.model_selection import train_test_split
 from datasets import load_dataset
-from collie import Trainer, CollieConfig, LlamaForCausalLM, TGSMonitor, MemoryMonitor, TGSMonitor, LossMonitor
+from collie import Trainer, CollieConfig, LlamaForCausalLM
 from collie.optim.lomo import Lomo
 from transformers import LlamaTokenizer
 
@@ -45,12 +45,17 @@ trainer = Trainer(
     optimizer=optimizer,
     train_dataset=train_data,
     eval_dataset=test_data,
-    monitors=[
-        LossMonitor(config),
-        TGSMonitor(config),
-        MemoryMonitor(config),
-        LRMonitor(config)
-    ]
+    args=transformers.TrainingArguments(
+            auto_find_batch_size=True, 
+            warmup_ratio=0.05,
+            num_train_epochs=2,  
+            lr_scheduler_type="cosine",
+            fp16=True,
+            save_steps=15500,
+            logging_steps=1, 
+            report_to="wandb",
+            output_dir='outputs'
+    )
 )
 trainer.train()
 model.save_pretrained("save/")
